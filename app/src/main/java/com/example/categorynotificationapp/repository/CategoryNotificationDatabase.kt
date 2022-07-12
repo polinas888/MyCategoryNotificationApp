@@ -7,7 +7,6 @@ import com.example.categorynotificationapp.model.Category
 import com.example.categorynotificationapp.model.Notification
 
 @Database(entities = [Category::class, Notification::class], version = 1)
-@TypeConverters(CategoryNotificationConverter::class)
 abstract class CategoryNotificationDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
 }

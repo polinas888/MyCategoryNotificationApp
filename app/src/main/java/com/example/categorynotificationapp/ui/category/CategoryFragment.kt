@@ -46,8 +46,10 @@ class CategoryFragment : Fragment() {
         categoryViewModel.categoryListLiveData.observe(viewLifecycleOwner, Observer { categories ->
             if (categories.isEmpty()) {
                 binding.emptyListText.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.GONE
             } else {
                 updateUI(categories)
+                binding.progressBar.visibility = View.GONE
             }
         })
 
@@ -67,6 +69,7 @@ class CategoryFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             CREATE_CATEGORY_FRAGMENT -> {
+                binding.progressBar.visibility = View.VISIBLE
                 if (resultCode == Activity.RESULT_OK) {
                     val bundle = data?.extras
                     val category = bundle?. getString ("category")
@@ -76,10 +79,6 @@ class CategoryFragment : Fragment() {
                         categoryViewModel.saveCategory(newCategory)
                     }
                     categoryViewModel.loadData()
-                    val listCategory = categoryViewModel.categoryListLiveData.value
-                    if (listCategory != null) {
-                        updateUI(listCategory)
-                    }
                 } else {
                      Log.i("Error", "Bad result")
                 }

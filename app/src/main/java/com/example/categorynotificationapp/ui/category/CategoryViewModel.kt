@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.categorynotificationapp.model.Category
 import com.example.categorynotificationapp.repository.CategoryNotificationRepository
 import com.example.categorynotificationapp.repository.DataResult
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
