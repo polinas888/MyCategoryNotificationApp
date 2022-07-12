@@ -7,20 +7,14 @@ import com.example.categorynotificationapp.databinding.ItemCatergoryBinding
 import com.example.categorynotificationapp.model.Category
 
 class CategoryAdapter(
+    private val listCategories: List<Category>,
     private val onItemClick: (Category) -> Unit
 ) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
-    private val listCategories: MutableList<Category> = mutableListOf()
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             ItemCatergoryBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
         return ViewHolder(binding, onItemClick)
-    }
-
-    fun setData(listCategory: List<Category>) {
-        listCategories.clear()
-        listCategories.addAll(listCategory)
-        notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {

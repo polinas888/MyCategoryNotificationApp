@@ -1,19 +1,48 @@
 package com.example.categorynotificationapp.ui.category
 
+import android.database.sqlite.SQLiteConstraintException
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.categorynotificationapp.model.Category
+import com.example.categorynotificationapp.repository.CategoryNotificationRepository
+import com.example.categorynotificationapp.repository.DataResult
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class CategoryViewModel : ViewModel() {
-    val listLocations = listOf(Category("1", "Яблоко"), Category("2", "Груша"),
-    Category("3", "Огурец"))
 
-    fun loadLocation() {
+    private val categoryRepository = CategoryNotificationRepository.get()
+    val categoryListLiveData = MutableLiveData<List<Category>>()
+
+     fun saveCategory(category: Category) {
+         viewModelScope.launch {
+             try {
+                 categoryRepository.addCategory(category)
+             } catch (exception: SQLiteConstraintException) {
+                 Log.i("SaveError", "Couldn't save category")
+             }
+         }
+    }
+
+    fun loadData() {
         viewModelScope.launch {
-            // get list from room
-//            val loadUserLocations = locationRepository.loadUserLocations()
-//            listLocationsLiveData.value = loadUserLocations
+            when (val categories = getCategories()) {
+                is DataResult.Ok -> {
+                    categoryListLiveData.value = categories.response!!
+                }
+                is DataResult.Error -> categories.error
+            }
         }
+    }
+
+    private suspend fun getCategories(): DataResult<List<Category>> {
+          return try {
+              val categories = categoryRepository.getCategories()
+              DataResult.Ok(categories)
+          } catch (e: Exception) {
+              DataResult.Error(e.message.toString())
+          }
     }
 }
