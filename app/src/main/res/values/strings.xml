@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">CategoryNotificationApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_button">+</string>
+    <string name="list_is_empty">Список категорий пуст</string>
+    <string name="toolbar_title_category">Категории</string>
+</resources>
