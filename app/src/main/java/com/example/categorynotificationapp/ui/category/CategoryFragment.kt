@@ -17,21 +17,16 @@ import com.example.categorynotificationapp.changeFragment
 import com.example.categorynotificationapp.databinding.FragmentCategoryBinding
 import com.example.categorynotificationapp.model.Category
 import com.example.categorynotificationapp.ui.notification.NotificationFragment
-import com.google.gson.GsonBuilder
 
 const val CREATE_CATEGORY_FRAGMENT = 1
-const val ARG_CATEGORY: String = "CATEGORY"
+const val ARG_CATEGORY_ID: String = "CATEGORY_ID"
 
 class CategoryFragment : Fragment() {
     private lateinit var binding: FragmentCategoryBinding
     private lateinit var categoryAdapter: CategoryAdapter
     private val categoryViewModel by viewModels<CategoryViewModel>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentCategoryBinding.inflate(layoutInflater)
         binding.categoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         return binding.root
@@ -91,11 +86,7 @@ class CategoryFragment : Fragment() {
     private fun adapterOnClick(category: Category) {
         val fragment = NotificationFragment()
         val args = Bundle()
-        val builder = GsonBuilder()
-        val gson = builder.create()
-        val result: String = gson.toJson(category)
-
-        args.putString(ARG_CATEGORY, result)
+        args.putInt(ARG_CATEGORY_ID, category.id)
         fragment.changeFragment(args, parentFragmentManager)
     }
 }

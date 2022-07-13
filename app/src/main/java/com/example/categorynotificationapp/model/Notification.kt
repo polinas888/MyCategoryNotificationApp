@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class Notification(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    var text: String
+    val text: String,
+    val category_id: Int
 )

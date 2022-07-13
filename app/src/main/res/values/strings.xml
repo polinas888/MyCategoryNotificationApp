@@ -5,7 +5,10 @@
     <string name="add_button">+</string>
     <string name="list_is_empty">Список категорий пуст</string>
     <string name="toolbar_title_category">Категории</string>
+    <string name="toolbar_title_notification">Заметки категории</string>
     <string name="ok_button">OK</string>
     <string name="cancel_button">Cancel</string>
     <string name="create_new_category_title">Create new category</string>
+    <string name="delete_notification">delete notification</string>
+    <string name="edit_notification">edit notification</string>
 </resources>

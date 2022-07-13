@@ -6,7 +6,7 @@ import com.example.categorynotificationapp.model.Category
 import com.example.categorynotificationapp.repository.CategoryNotificationDatabase
 import java.lang.IllegalStateException
 
-private const val DATABASE_NAME = "crime-database"
+private const val DATABASE_NAME = "category_notification-database"
 class CategoryNotificationRepository private constructor(context: Context){
 
     private val database: CategoryNotificationDatabase = Room.databaseBuilder(
