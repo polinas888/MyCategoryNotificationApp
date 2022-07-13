@@ -1,7 +1,7 @@
 package com.example.categorynotificationapp
 
 import android.app.Application
-import com.example.categorynotificationapp.repository.CategoryNotificationRepository
+import com.example.categorynotificationapp.repository.category.CategoryNotificationRepository
 
 class CategoryNotificationApplication : Application() {
 

@@ -78,7 +78,9 @@ class CategoryFragment : Fragment() {
                     if (newCategory != null) {
                         categoryViewModel.saveCategory(newCategory)
                     }
+                    binding.emptyListText.visibility = View.GONE
                     categoryViewModel.loadData()
+                    categoryViewModel.categoryListLiveData.value?.let { categories -> updateUI(categories) }
                 } else {
                      Log.i("Error", "Bad result")
                 }

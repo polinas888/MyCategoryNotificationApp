@@ -1,8 +1,9 @@
-package com.example.categorynotificationapp.repository
+package com.example.categorynotificationapp.repository.category
 
 import android.content.Context
 import androidx.room.Room
 import com.example.categorynotificationapp.model.Category
+import com.example.categorynotificationapp.repository.CategoryNotificationDatabase
 import java.lang.IllegalStateException
 
 private const val DATABASE_NAME = "crime-database"

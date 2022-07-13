@@ -1,4 +1,4 @@
-package com.example.categorynotificationapp.repository
+package com.example.categorynotificationapp.repository.category
 
 import androidx.room.Dao
 import androidx.room.Insert
