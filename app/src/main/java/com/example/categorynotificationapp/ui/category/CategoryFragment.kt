@@ -13,10 +13,12 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.categorynotificationapp.MainActivity
 import com.example.categorynotificationapp.R
+import com.example.categorynotificationapp.appComponent
 import com.example.categorynotificationapp.changeFragment
 import com.example.categorynotificationapp.databinding.FragmentCategoryBinding
 import com.example.categorynotificationapp.model.Category
 import com.example.categorynotificationapp.ui.notification.NotificationFragment
+import javax.inject.Inject
 
 const val CREATE_CATEGORY_FRAGMENT = 1
 const val ARG_CATEGORY_ID: String = "CATEGORY_ID"
@@ -24,10 +26,15 @@ const val ARG_CATEGORY_ID: String = "CATEGORY_ID"
 class CategoryFragment : Fragment() {
     private lateinit var binding: FragmentCategoryBinding
     private lateinit var categoryAdapter: CategoryAdapter
-    private val categoryViewModel by viewModels<CategoryViewModel>()
+    @Inject
+    lateinit var categoryViewModelFactory: CategoryViewModelFactory
+    private val categoryViewModel by viewModels<CategoryViewModel>() {
+        categoryViewModelFactory
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentCategoryBinding.inflate(layoutInflater)
+        requireContext().appComponent.inject(this)
         binding.categoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         return binding.root
     }

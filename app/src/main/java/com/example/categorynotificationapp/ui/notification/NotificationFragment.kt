@@ -9,17 +9,24 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.categorynotificationapp.MainActivity
 import com.example.categorynotificationapp.R
+import com.example.categorynotificationapp.appComponent
 import com.example.categorynotificationapp.databinding.FragmentNotificationBinding
 import com.example.categorynotificationapp.ui.category.ARG_CATEGORY_ID
+import javax.inject.Inject
 
 class NotificationFragment : Fragment() {
     private lateinit var binding: FragmentNotificationBinding
     private lateinit var notificationAdapter: NotificationAdapter
-    private val notificationViewModel by viewModels<NotificationViewModel>()
+    @Inject
+    lateinit var notificationViewModelFactory: NotificationViewModelFactory
+    private val notificationViewModel by viewModels<NotificationViewModel> {
+        notificationViewModelFactory
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentNotificationBinding.inflate(layoutInflater)
+        requireContext().appComponent.inject(this)
         binding.notificationRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         return binding.root
     }

@@ -1,14 +1,16 @@
 package com.example.categorynotificationapp.repository.notification
 
-import android.content.Context
 import com.example.categorynotificationapp.model.Notification
+import javax.inject.Inject
 
-class NotificationRepository private constructor(context: Context) {
+class NotificationRepository @Inject constructor(notificationDao: NotificationDao): NotificationDao {
 
-    private val notificationDao = database.notificationDao()
+    override suspend fun getNotifications(): List<Notification> {
+        TODO("Not yet implemented")
+    }
 
-    suspend fun getNotifications() : List<Notification> = notificationDao.getNotifications()
-
-    suspend fun addNotification(notification: Notification) = notificationDao.addNotification(notification)
+    override suspend fun addNotification(notification: Notification) {
+        TODO("Not yet implemented")
+    }
 
 }
