@@ -5,12 +5,16 @@ import javax.inject.Inject
 
 class NotificationRepository @Inject constructor(notificationDao: NotificationDao): NotificationDao {
 
-    override suspend fun getNotifications(): List<Notification> {
-        TODO("Not yet implemented")
+    private val notificationDao: NotificationDao by lazy {
+        notificationDao
+    }
+
+    override suspend fun getNotifications(categoryId: Int): List<Notification> {
+        return notificationDao.getNotifications(categoryId)
     }
 
     override suspend fun addNotification(notification: Notification) {
-        TODO("Not yet implemented")
+        notificationDao.addNotification(notification)
     }
 
 }

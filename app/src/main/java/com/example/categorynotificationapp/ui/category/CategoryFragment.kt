@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.categorynotificationapp.MainActivity
 import com.example.categorynotificationapp.R
@@ -18,6 +19,7 @@ import com.example.categorynotificationapp.changeFragment
 import com.example.categorynotificationapp.databinding.FragmentCategoryBinding
 import com.example.categorynotificationapp.model.Category
 import com.example.categorynotificationapp.ui.notification.NotificationFragment
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 const val CREATE_CATEGORY_FRAGMENT = 1
@@ -74,17 +76,19 @@ class CategoryFragment : Fragment() {
                 binding.progressBar.visibility = View.VISIBLE
                 if (resultCode == Activity.RESULT_OK) {
                     val bundle = data?.extras
-                    val category = bundle?. getString ("category")
-                    val newCategory = category?.let { categoryName -> Category(name = categoryName) }
-
-                    if (newCategory != null) {
-                        categoryViewModel.saveCategory(newCategory)
+                    val category = bundle?.getString("category")
+                    val newCategory =
+                        category?.let { categoryName -> Category(name = categoryName) }
+                    lifecycleScope.launch {
+                        if (newCategory != null) {
+                            categoryViewModel.saveCategory(newCategory)
+                        }
+                        binding.emptyListText.visibility = View.GONE
+                        categoryViewModel.loadData()
+                        categoryViewModel.categoryListLiveData.value?.let { categories ->
+                            updateUI(categories)
+                        }
                     }
-                    binding.emptyListText.visibility = View.GONE
-                    categoryViewModel.loadData()
-                    categoryViewModel.categoryListLiveData.value?.let { categories -> updateUI(categories) }
-                } else {
-                     Log.i("Error", "Bad result")
                 }
             }
         }

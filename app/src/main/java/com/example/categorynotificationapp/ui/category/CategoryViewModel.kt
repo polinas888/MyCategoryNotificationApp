@@ -15,7 +15,7 @@ class CategoryViewModel(private val categoryRepository: CategoryRepository) : Vi
 
     val categoryListLiveData = MutableLiveData<List<Category>>()
 
-     fun saveCategory(category: Category) {
+     suspend fun saveCategory(category: Category) {
          viewModelScope.launch {
              try {
                  categoryRepository.addCategory(category)
