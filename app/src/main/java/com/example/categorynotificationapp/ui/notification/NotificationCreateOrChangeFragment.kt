@@ -9,9 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.setFragmentResult
-import com.example.categorynotificationapp.changeFragment
 import com.example.categorynotificationapp.databinding.FragmentNotificationCreateOrChangeBinding
-import com.example.categorynotificationapp.ui.category.ARG_CATEGORY_ID
 
 class NotificationCreateOrChangeFragment : Fragment() {
     private lateinit var binding: FragmentNotificationCreateOrChangeBinding
@@ -21,20 +19,17 @@ class NotificationCreateOrChangeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNotificationCreateOrChangeBinding.inflate(layoutInflater)
-        val categoryId = arguments?.getInt(ARG_CATEGORY_ID)
         binding.cancelButton.setOnClickListener {
-            val fragment = NotificationFragment()
-            arguments?.let { args -> fragment.changeFragment(args, parentFragmentManager ) }
+            val manager: FragmentManager = requireActivity().supportFragmentManager
+            val trans: FragmentTransaction = manager.beginTransaction()
+            trans.remove(this)
+            trans.commit()
+            manager.popBackStack()
         }
 
         binding.okButton.setOnClickListener {
             val notification = binding.createOrEditNotificationEditText.text.toString()
-            setFragmentResult("requestKey", bundleOf("bundleKey" to notification))
-            val fragment = NotificationFragment()
-            val args = Bundle()
-            if (categoryId != null) {
-                args.putInt(ARG_CATEGORY_ID, categoryId)
-            }
+            setFragmentResult(NOTIFICATION_REQUEST_KEY, bundleOf(ARG_NOTIFICATION to notification))
             val manager: FragmentManager = requireActivity().supportFragmentManager
             val trans: FragmentTransaction = manager.beginTransaction()
             trans.remove(this)

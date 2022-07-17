@@ -21,9 +21,12 @@ import com.example.categorynotificationapp.ui.category.ARG_CATEGORY_ID
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+const val ARG_NOTIFICATION = "arg_notification"
+const val NOTIFICATION_REQUEST_KEY = "requestKey"
 class NotificationFragment : Fragment() {
     private lateinit var binding: FragmentNotificationBinding
     private lateinit var notificationAdapter: NotificationAdapter
+    private var categoryId = 0
 
     @Inject
     lateinit var notificationViewModelFactory: NotificationViewModelFactory
@@ -33,16 +36,13 @@ class NotificationFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setFragmentResultListener("requestKey") { requestKey, bundle ->
-            val notification = bundle.getString("bundleKey")
-            val categoryId = arguments?.getInt(ARG_CATEGORY_ID)
-            Log.i("NotificationLog", notificationViewModel.categoryId.value.toString())
+        setFragmentResultListener(NOTIFICATION_REQUEST_KEY) { requestKey, bundle ->
+            val notification = bundle.getString(ARG_NOTIFICATION)
             val newNotification = notification?.let { notificationText ->
-                categoryId?.let { category_id ->
+                categoryId.let { category_id ->
                     Notification(text = notificationText, category_id = category_id)
                 }
             }
-            Log.i("notificationLog", notification.toString())
             lifecycleScope.launch {
                 if (newNotification != null) {
                     notificationViewModel.saveNotification(newNotification)
@@ -67,7 +67,7 @@ class NotificationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val categoryId = arguments?.getInt(ARG_CATEGORY_ID)!!
+        categoryId = arguments?.getInt(ARG_CATEGORY_ID)!!
         notificationViewModel.categoryId.value = categoryId
         (activity as MainActivity).supportActionBar?.title =
             getString(R.string.toolbar_title_notification) + " $categoryId"
@@ -82,13 +82,13 @@ class NotificationFragment : Fragment() {
                 } else {
                     updateUI(notifications)
                     binding.progressBar.visibility = View.GONE
+                    binding.emptyListText.visibility = View.INVISIBLE
                 }
             })
 
         binding.addButton.setOnClickListener {
             val fragment = NotificationCreateOrChangeFragment()
             val args = Bundle()
-            args.putInt("categoryId", categoryId)
             fragment.changeFragment(args, parentFragmentManager)
         }
     }

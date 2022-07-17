@@ -27,7 +27,7 @@
         android:layout_marginBottom="332dp"
         android:text="@string/list_is_empty"
         android:textSize="18sp"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.477"
