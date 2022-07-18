@@ -85,9 +85,10 @@ class CategoryFragment : Fragment() {
                         }
                         binding.emptyListText.visibility = View.GONE
                         categoryViewModel.loadData()
-                        categoryViewModel.categoryListLiveData.value?.let { categories ->
-                            updateUI(categories)
-                        }
+                        categoryViewModel.categoryListLiveData.observe(viewLifecycleOwner, Observer {
+                         categories -> updateUI(categories)
+                        })
+                        binding.progressBar.visibility = View.GONE
                     }
                 }
             }

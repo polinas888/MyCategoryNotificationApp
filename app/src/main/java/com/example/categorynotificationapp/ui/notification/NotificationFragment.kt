@@ -41,35 +41,25 @@ class NotificationFragment : Fragment() {
         setFragmentResultListener(NOTIFICATION_REQUEST_KEY) { requestKey, bundle ->
             val notification = bundle.getString(ARG_NOTIFICATION)
             val isNewNotification = bundle.getBoolean(IS_NEW_NOTIFICATION)
-            if(isNewNotification) {
+            if (isNewNotification) {
                 val newNotification = notification?.let { notificationText ->
-                    categoryId.let { category_id ->
-                        Notification(text = notificationText, category_id = category_id)
-                    }
+                    Notification(text = notificationText, category_id = categoryId)
                 }
+                binding.progressBar.visibility = View.VISIBLE
                 lifecycleScope.launch {
                     if (newNotification != null) {
                         notificationViewModel.saveNotification(newNotification)
                     }
-                    binding.emptyListText.visibility = View.INVISIBLE
-                    notificationViewModel.loadData()
-                    notificationViewModel.notificationListLiveData.value?.let { notifications ->
-                        updateUI(notifications)
-                    }
+                    setupViewVisibilityUpdateUi()
                 }
             } else {
                 val newNotification = notification?.let { notificationText ->
-                        Notification(id = notificationIdForUpdate, text = notificationText, category_id = categoryId)
-                    }
+                    Notification(id = notificationIdForUpdate, text = notificationText, category_id = categoryId) }
                 lifecycleScope.launch {
                     if (newNotification != null) {
                         notificationViewModel.updateNotification(newNotification)
                     }
-                    binding.emptyListText.visibility = View.INVISIBLE
-                    notificationViewModel.loadData()
-                    notificationViewModel.notificationListLiveData.value?.let { notifications ->
-                        updateUI(notifications)
-                    }
+                    setupViewVisibilityUpdateUi()
                 }
             }
         }
@@ -97,12 +87,11 @@ class NotificationFragment : Fragment() {
             Observer { notifications ->
                 if (notifications.isEmpty()) {
                     binding.emptyListText.visibility = View.VISIBLE
-                    binding.progressBar.visibility = View.GONE
                 } else {
                     updateUI(notifications)
-                    binding.progressBar.visibility = View.GONE
                     binding.emptyListText.visibility = View.INVISIBLE
                 }
+                binding.progressBar.visibility = View.GONE
             })
 
         binding.addButton.setOnClickListener {
@@ -112,14 +101,25 @@ class NotificationFragment : Fragment() {
         }
     }
 
+    private fun setupViewVisibilityUpdateUi() {
+        binding.emptyListText.visibility = View.INVISIBLE
+        notificationViewModel.loadData()
+        notificationViewModel.notificationListLiveData.value?.let { notifications ->
+            updateUI(notifications)
+        }
+        binding.progressBar.visibility = View.GONE
+    }
+
     private fun updateUI(notifications: List<Notification>) {
         notificationAdapter =
             NotificationAdapter((notifications),
-                { notification -> deleteNotification(notification) }, {notification ->  updateNotification(notification)})
+                { notification -> deleteNotification(notification) },
+                { notification -> updateNotification(notification) })
         binding.notificationRecyclerView.adapter = notificationAdapter
     }
 
     private fun deleteNotification(notification: Notification) {
+        binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             notificationViewModel.deleteNotification(notification)
             notificationViewModel.loadData()
@@ -131,20 +131,21 @@ class NotificationFragment : Fragment() {
                     binding.emptyListText.visibility = View.VISIBLE
                 }
             })
+            binding.progressBar.visibility = View.GONE
         }
     }
 
     private fun updateNotification(notification: Notification) {
-              lifecycleScope.launch {
-                  notificationIdForUpdate = notification.id
-                  val fragment = NotificationCreateOrChangeFragment()
-                  val args = Bundle()
-                  val builder = GsonBuilder()
-                  val gson = builder.create()
-                  val result: String = gson.toJson(notification)
-                  args.putString(ARG_NOTIFICATION, result)
-                  fragment.changeFragment(args, parentFragmentManager)
-              }
+        lifecycleScope.launch {
+            notificationIdForUpdate = notification.id
+            val fragment = NotificationCreateOrChangeFragment()
+            val args = Bundle()
+            val builder = GsonBuilder()
+            val gson = builder.create()
+            val result: String = gson.toJson(notification)
+            args.putString(ARG_NOTIFICATION, result)
+            fragment.changeFragment(args, parentFragmentManager)
+        }
     }
 }
 
