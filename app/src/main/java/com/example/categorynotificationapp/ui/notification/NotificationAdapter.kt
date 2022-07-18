@@ -8,7 +8,8 @@ import com.example.categorynotificationapp.model.Notification
 
 class NotificationAdapter(
     private val listNotifications: List<Notification>,
-    private val onClickDelete: (Notification) -> Unit
+    private val onClickDelete: (Notification) -> Unit,
+    private val onClickUpdate: (Notification) -> Unit
 ) : RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
@@ -38,6 +39,10 @@ class NotificationAdapter(
 
             binding.deleteNotification.setOnClickListener {
                   onClickDelete(notification)
+            }
+
+            binding.editNotification.setOnClickListener {
+                onClickUpdate(notification)
             }
         }
     }
