@@ -1,7 +1,6 @@
 package com.example.categorynotificationapp.ui.notification
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -95,14 +94,19 @@ class NotificationFragment : Fragment() {
 
     private fun updateUI(notifications: List<Notification>) {
         notificationAdapter =
-            NotificationAdapter(notifications) { notification -> adapterOnClick(notification) }
+            NotificationAdapter((notifications),
+                {notification -> deleteNotification(notification)})
         binding.notificationRecyclerView.adapter = notificationAdapter
     }
 
-    private fun adapterOnClick(notification: Notification) {
-//        val fragment = NotificationFragment()
-//        val args = Bundle()
-//        args.putInt(ARG_CATEGORY_ID, category.id)
-//        fragment.changeFragment(args, parentFragmentManager)
+    private fun deleteNotification(notification: Notification) {
+        lifecycleScope.launch {
+            notificationViewModel.deleteNotification(notification.id)
+            binding.emptyListText.visibility = View.INVISIBLE
+            notificationViewModel.loadData()
+            notificationViewModel.notificationListLiveData.value?.let { notifications ->
+                updateUI(notifications)
+            }
+        }
     }
 }

@@ -20,7 +20,15 @@ class NotificationViewModel @Inject constructor(private val notificationReposito
         try {
             notificationRepository.addNotification(notification)
         } catch (exception: SQLiteConstraintException) {
-           Log.i("NotificationLog", "Couldnt save notification")
+           Log.i("NotificationLog", "Couldn't save notification")
+        }
+    }
+
+    suspend fun deleteNotification(notificationId: Int) {
+        try {
+            notificationRepository.deleteNotificationById(notificationId)
+        } catch (e: java.lang.Exception) {
+            Log.i("NotificationLog", "Couldn't delete notification")
         }
     }
 

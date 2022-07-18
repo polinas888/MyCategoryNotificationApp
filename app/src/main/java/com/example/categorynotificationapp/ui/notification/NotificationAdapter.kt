@@ -8,21 +8,19 @@ import com.example.categorynotificationapp.model.Notification
 
 class NotificationAdapter(
     private val listNotifications: List<Notification>,
-    private val onItemClick: (Notification) -> Unit
+    private val onClickDelete: (Notification) -> Unit
 ) : RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             ItemNotificationBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
-        return ViewHolder(binding, onItemClick)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         getNotification(position).also {
             viewHolder.bind(it)
         }
-
-        viewHolder.itemView.setOnClickListener { onItemClick(listNotifications[position]) }
     }
 
     override fun getItemCount() = listNotifications.size
@@ -32,12 +30,15 @@ class NotificationAdapter(
     }
 
     inner class ViewHolder(
-        private val binding: ItemNotificationBinding,
-        val onClick: (Notification) -> Unit
+        private val binding: ItemNotificationBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(notification: Notification) {
             binding.notification = notification
+
+            binding.deleteNotification.setOnClickListener {
+                  onClickDelete(notification)
+            }
         }
     }
 }

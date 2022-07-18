@@ -17,4 +17,7 @@ class NotificationRepository @Inject constructor(notificationDao: NotificationDa
         notificationDao.addNotification(notification)
     }
 
+    override suspend fun deleteNotificationById(notificationId: Int) {
+        notificationDao.deleteNotificationById(notificationId)
+    }
 }
