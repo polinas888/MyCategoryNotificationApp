@@ -22,6 +22,7 @@ import javax.inject.Inject
 
 const val ARG_NOTIFICATION = "arg_notification"
 const val NOTIFICATION_REQUEST_KEY = "requestKey"
+
 class NotificationFragment : Fragment() {
     private lateinit var binding: FragmentNotificationBinding
     private lateinit var notificationAdapter: NotificationAdapter
@@ -103,14 +104,14 @@ class NotificationFragment : Fragment() {
         lifecycleScope.launch {
             notificationViewModel.deleteNotification(notification)
             notificationViewModel.loadData()
-            notificationViewModel.notificationListLiveData.value?.let { notifications ->
-                updateUI(notifications)
-            }
-            if (notificationViewModel.notificationListLiveData.value?.isNotEmpty() == true) {
-                binding.emptyListText.visibility = View.INVISIBLE
-            } else {
-                binding.emptyListText.visibility = View.VISIBLE
-            }
+            notificationViewModel.notificationListLiveData.observe(viewLifecycleOwner, Observer {
+                updateUI(it)
+                if (notificationViewModel.notificationListLiveData.value?.isNotEmpty() == true) {
+                    binding.emptyListText.visibility = View.INVISIBLE
+                } else {
+                    binding.emptyListText.visibility = View.VISIBLE
+                }
+            })
         }
     }
 }
